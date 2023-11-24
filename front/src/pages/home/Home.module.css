@@ -1,0 +1,11 @@
+.home_main {
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+  gap: 30px;
+  align-items: center;
+}
+
+.home_title {
+  width: 1024px;
+}

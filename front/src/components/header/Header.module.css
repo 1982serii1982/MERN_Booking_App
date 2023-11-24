@@ -1,0 +1,126 @@
+.header {
+  background-color: #003580;
+  color: white;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.header_container {
+  width: 100%;
+  max-width: 1024px;
+  margin: 20px 0 100px 0;
+}
+
+.header_container_hotelList {
+  width: 100%;
+  max-width: 1024px;
+  margin: 20px 0;
+}
+
+.header_list {
+  display: flex;
+  gap: 30px;
+}
+
+.header_search_icon {
+  color: grey;
+}
+
+.header_search {
+  height: 30px;
+  background-color: bisque;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: 3px solid #febb02;
+  padding: 10px 0;
+  border-radius: 5px;
+  margin-top: 20px;
+  position: absolute;
+  bottom: -25px;
+  width: 100%;
+  max-width: 1024px;
+}
+
+.header_search_item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header_search_text {
+  color: black;
+  width: 100%;
+}
+
+.header_search_input {
+  border: none;
+  outline: none;
+  padding: 5px;
+}
+
+.header_search_person_visible {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.header_search_calendar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 36%;
+}
+
+.header_search_calendar span {
+  color: grey;
+}
+
+/******************** OPTIONS- START ********************/
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  color: grey;
+  width: 190px;
+  background-color: white;
+  position: absolute;
+  top: 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0px 0px 14px 1px grey;
+  z-index: 2;
+}
+
+.options_item {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.options_item span {
+  display: block;
+}
+
+.options_control {
+  display: flex;
+  width: 43%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.options_control_button {
+  cursor: pointer;
+}
+
+.options_control_button:disabled {
+  cursor: not-allowed;
+}
+
+/******************** OPTIONS- END ********************/

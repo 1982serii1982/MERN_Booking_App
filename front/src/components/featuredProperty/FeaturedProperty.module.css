@@ -1,0 +1,40 @@
+.feat_prop {
+  width: 100%;
+  max-width: 1024px;
+  display: flex;
+  gap: 20px;
+}
+
+.feat_prop_img {
+  width: 100%;
+  height: 61%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.feat_prop_rating {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.feat_prop_footer {
+  padding: 10px;
+}
+
+.feat_prop_footer p {
+  margin: 0 0 10px;
+}
+
+.feat_prop_name {
+  font-weight: 600;
+}
+
+.feat_prop_rating > button {
+  border: none;
+  outline: none;
+  padding: 5px;
+  color: white;
+  background-color: #003580;
+  border-radius: 5px;
+}

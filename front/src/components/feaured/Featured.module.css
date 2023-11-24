@@ -1,0 +1,34 @@
+.featured {
+  width: 100%;
+  max-width: 1024px;
+  display: flex;
+  gap: 20px;
+  z-index: 1;
+}
+
+.featured_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured_item {
+  color: white;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.featured_footer {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+}
+
+.featured_title {
+  font-size: 36px;
+}
+
+.featured_desc {
+  font-size: 24px;
+}
