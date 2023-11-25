@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import cors from "cors";
+//import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import authRoute from "./routes/auth.js";
@@ -30,21 +30,24 @@ mongoose.connection.on("connected", () => {
 app.use(cookieParser()); //The middleware will parse the Cookie header on the request and expose the cookie data as the property req.cookies
 app.use(express.json());
 
-const whitelist = ["http://localhost:5173", "http://localhost:3000"];
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE"],
-    credentials: true,
-  })
-);
+// const whitelist = ["http://localhost:5173", "http://localhost:3000"];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || whitelist.indexOf(origin) !== -1) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE"],
+//     credentials: true,
+//   })
+// );
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
