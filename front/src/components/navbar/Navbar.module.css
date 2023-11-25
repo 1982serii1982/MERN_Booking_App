@@ -1,0 +1,60 @@
+.root {
+  background-color: #003580;
+  padding: 10px 0;
+  border-bottom: 1px solid white;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: #fff;
+  font-weight: 700;
+  line-height: 35px;
+  text-transform: uppercase;
+  letter-spacing: 0.15px;
+  border-radius: 5px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+.logo:hover {
+  background-color: #4361ee;
+}
+
+.buttons_wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.buttons a:last-child button {
+  margin-left: 10px;
+}
+
+.buttons > button {
+  margin-left: 10px;
+  width: 100%;
+}
+
+.account {
+  border: 1px solid white;
+  width: 100%;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  text-wrap: nowrap;
+  padding: 10px;
+}

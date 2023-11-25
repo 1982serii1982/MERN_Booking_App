@@ -17,6 +17,12 @@ router.post("/:hotelId", checkToken, checkAdmin, RoomController.createRoom);
 //UPDATE
 router.patch("/:roomId", checkToken, checkAdmin, RoomController.updateRoom);
 
+//UPDATE ROOM NUMBER AVAILABILITY
+router.patch(
+  "/availability/:roomNumberId",
+  RoomController.updateRoomAvailability
+);
+
 //DELETE
 router.delete(
   "/:roomId/:hotelId",

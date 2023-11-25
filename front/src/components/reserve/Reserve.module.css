@@ -1,0 +1,23 @@
+.room_item {
+  padding: 10px;
+  background-color: #003580;
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.room_info div {
+  padding-bottom: 5px;
+}
+
+.room_number {
+  display: flex;
+  align-items: self-end;
+  gap: 3px;
+}
+
+.room_number input {
+  order: -1;
+}

@@ -2,8 +2,8 @@ import React from "react";
 
 import { Navbar } from "../../components/navbar/Navbar";
 import { Header } from "../../components/header/Header";
-import { Featured } from "../../components/feaured/Featured";
-import { PropertyList } from "../../components/property/PropertyList";
+import { CityProperty } from "../../components/cityProperty/CityProperty";
+import { TypeProperty } from "../../components/typeProperty/TypeProperty";
 import { FeaturedProperty } from "../../components/featuredProperty/FeaturedProperty";
 import { Subscribe } from "../../components/subscribe/Subscribe";
 import { Footer } from "../../components/footer/Footer";
@@ -16,9 +16,9 @@ export const Home = () => {
       <Navbar />
       <Header />
       <div className={styles.home_main}>
-        <Featured />
+        <CityProperty />
         <h2 className={styles.home_title}>Browse by property type</h2>
-        <PropertyList />
+        <TypeProperty />
         <h2 className={styles.home_title}>Home guests love</h2>
         <FeaturedProperty />
         <Subscribe />

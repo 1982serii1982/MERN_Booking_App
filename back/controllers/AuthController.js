@@ -58,10 +58,15 @@ export const login = async (req, res, next) => {
 
     const { passwordHash, isAdmin, ...userData } = user._doc;
 
-    res.cookie("access_token", token, { httpOnly: true }).status(200).json({
-      message: "success",
-      user: userData,
-    });
+    res
+      .cookie("access_token", token, {
+        httpOnly: true, // Informatia despre aceasta https://www.cookiepro.com/knowledge/httponly-cookie/
+      })
+      .status(200)
+      .json({
+        message: "success",
+        user: userData,
+      });
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
@@ -19,11 +19,23 @@ import AttractionsIcon from "@mui/icons-material/Attractions";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PersonIcon from "@mui/icons-material/Person";
 
-import { useOutsideClick } from "../../utils/useOutsideClick";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
 import styles from "./Header.module.css";
 
 export const Header = ({ type }) => {
   const navigate = useNavigate();
+
+  const {
+    destinationOption,
+    startDateOption,
+    endDateOption,
+    personOption,
+    dispatch,
+  } = React.useContext(SearchContext);
+
+  const { user, loading, error, dispatchAuth } = React.useContext(AuthContext);
 
   /////////////////// STATES //////////////////////////////
   const [listData, setListData] = React.useState([
@@ -61,17 +73,6 @@ export const Header = ({ type }) => {
 
   const [openPersonOption, setOpenPersonOption] = React.useState(false);
 
-  const [destinationOption, setDestinationOption] = React.useState("");
-
-  const [startDateOption1, setStartDateOption] = React.useState(dayjs());
-  const [endDateOption1, setEndDateOption] = React.useState(dayjs());
-
-  const [personOption, setPersonOption] = React.useState({
-    adult: 0,
-    children: 0,
-    room: 0,
-  });
-
   ////////////////// HANDLERS ////////////////////////////
 
   const handleHeaderList = (id) => {
@@ -97,14 +98,7 @@ export const Header = ({ type }) => {
   };
 
   const searchButtonHandler = () => {
-    navigate("/hotels", {
-      state: {
-        destinationOption,
-        startDateOption: startDateOption1.format(),
-        endDateOption: endDateOption1.format(),
-        personOption,
-      },
-    });
+    navigate("/hotels");
   };
 
   //////////////// OUTSIDE CLICK HANDLE - START //////////////
@@ -117,14 +111,38 @@ export const Header = ({ type }) => {
 
   //////////////// OUTSIDE CLICK HANDLE - END //////////////
   //------------------------------------------------------------------------------------------------------/
-  //////////////// CONTROL BUTTON HANDLE - START //////////////
+  //////////////// CONTROL BUTTON HANDLE - START //////////////setStartDateOption
 
-  const controlButtonHandler = (name, action) => {
-    setPersonOption((prevState) => {
-      return {
-        ...prevState,
-        [name]: action === "i" ? prevState[name] + 1 : prevState[name] - 1,
-      };
+  const setDestinationOption = (value) => {
+    dispatch({
+      type: "set_search",
+      payload: value,
+      key: "destinationOption",
+    });
+  };
+
+  const setStartDateOption = (value) => {
+    dispatch({
+      type: "set_search",
+      payload: value,
+      key: "startDateOption",
+    });
+  };
+
+  const setEndDateOption = (value) => {
+    dispatch({
+      type: "set_search",
+      payload: value,
+      key: "endDateOption",
+    });
+  };
+
+  const setPersonOption = (name, unary) => {
+    dispatch({
+      type: "set_search",
+      key: "personOption",
+      name,
+      unary,
     });
   };
 
@@ -186,19 +204,25 @@ export const Header = ({ type }) => {
               Get rewarded for your travels - unlock instants savings of 10% or
               more with a free Hotel booking account
             </p>
-            <Button
-              sx={{
-                ":hover": {
-                  backgroundColor: "#01579b",
-                  outline: "1px solid white",
-                  color: "white",
-                },
-              }}
-              variant="signin"
-              className={styles.header_btn}
-            >
-              Sign In/ Register
-            </Button>
+            {!user && (
+              <Link>
+                <Button
+                  sx={{
+                    margin: "0",
+                    ":hover": {
+                      backgroundColor: "#01579b",
+                      outline: "1px solid white",
+                      color: "white",
+                    },
+                  }}
+                  variant="signin"
+                  className={styles.header_btn}
+                >
+                  Sign In/ Register
+                </Button>
+              </Link>
+            )}
+
             <div className={styles.header_search}>
               <div className={styles.header_search_item}>
                 <HotelIcon
@@ -216,7 +240,7 @@ export const Header = ({ type }) => {
               <div className={styles.header_search_calendar}>
                 <DatePicker
                   onChange={(newValue) => setStartDateOption(newValue)}
-                  value={startDateOption1}
+                  value={startDateOption}
                   className="calendar"
                   format="DD-MM-YYYY"
                   slots={{
@@ -232,7 +256,7 @@ export const Header = ({ type }) => {
                 <span>to</span>
                 <DatePicker
                   onChange={(newValue) => setEndDateOption(newValue)}
-                  value={endDateOption1}
+                  value={endDateOption}
                   className="calendar"
                   format="DD-MM-YYYY"
                   slots={{
@@ -271,7 +295,7 @@ export const Header = ({ type }) => {
                       <div className={styles.options_control}>
                         <button
                           className={styles.options_control_button}
-                          onClick={() => controlButtonHandler("adult", "d")}
+                          onClick={() => setPersonOption("adult", "d")}
                           disabled={personOption.adult < 1 ? true : false}
                         >
                           -
@@ -281,7 +305,7 @@ export const Header = ({ type }) => {
                         >{`${personOption.adult}`}</span>
                         <button
                           className={styles.options_control_button}
-                          onClick={() => controlButtonHandler("adult", "i")}
+                          onClick={() => setPersonOption("adult", "i")}
                         >
                           +
                         </button>
@@ -292,7 +316,7 @@ export const Header = ({ type }) => {
                       <div className={styles.options_control}>
                         <button
                           className={styles.options_control_button}
-                          onClick={() => controlButtonHandler("children", "d")}
+                          onClick={() => setPersonOption("children", "d")}
                           disabled={personOption.children < 1 ? true : false}
                         >
                           -
@@ -302,7 +326,7 @@ export const Header = ({ type }) => {
                         >{`${personOption.children}`}</span>
                         <button
                           className={styles.options_control_button}
-                          onClick={() => controlButtonHandler("children", "i")}
+                          onClick={() => setPersonOption("children", "i")}
                         >
                           +
                         </button>
@@ -313,7 +337,7 @@ export const Header = ({ type }) => {
                       <div className={styles.options_control}>
                         <button
                           className={styles.options_control_button}
-                          onClick={() => controlButtonHandler("room", "d")}
+                          onClick={() => setPersonOption("room", "d")}
                           disabled={personOption.room < 1 ? true : false}
                         >
                           -
@@ -323,7 +347,7 @@ export const Header = ({ type }) => {
                         >{`${personOption.room}`}</span>
                         <button
                           className={styles.options_control_button}
-                          onClick={() => controlButtonHandler("room", "i")}
+                          onClick={() => setPersonOption("room", "i")}
                         >
                           +
                         </button>

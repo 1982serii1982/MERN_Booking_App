@@ -8,6 +8,21 @@ const router = express.Router();
 //GET ALL
 router.get("/", HotelController.getAllHotels);
 
+//GET ALL (BY CITY)
+router.get("/find/byCity", HotelController.getAllHotelsByCity);
+
+//GET ALL (BY FEATURE)
+router.get("/find/byFeature", HotelController.getAllFeaturedHotels);
+
+//GET ALL (COUNTED BY CITY)
+router.get("/count/byCity", HotelController.countHotelsByCity);
+
+//GET ALL (COUNTED BY TYPE)
+router.get("/count/byType", HotelController.countHotelsByType);
+
+//GET ALL ROOMS(BY HOTEL)
+router.get("/room/:id", HotelController.getHotelRooms);
+
 //GET
 router.get("/:id", HotelController.getOneHotel);
 

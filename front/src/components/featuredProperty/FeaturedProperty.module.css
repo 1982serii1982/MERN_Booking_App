@@ -18,6 +18,10 @@
   align-items: center;
 }
 
+.feat_prop_rating span {
+  text-transform: capitalize;
+}
+
 .feat_prop_footer {
   padding: 10px;
 }

@@ -1,6 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-import dayjs from "dayjs";
+//import { useLocation } from "react-router-dom";
+//import dayjs from "dayjs";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
@@ -15,36 +15,80 @@ import { Header } from "../../components/header/Header";
 import { Navbar } from "../../components/navbar/Navbar";
 import { SearchResult } from "../../components/searchResult/SearchResult";
 
+import { SearchContext } from "../../context/SearchContext";
+import useFetch from "../../hooks/useFetch";
 import styles from "./HotelList.module.css";
 
 export const HotelList = () => {
-  const location = useLocation();
+  const {
+    destinationOption,
+    startDateOption,
+    endDateOption,
+    personOption,
+    dispatch,
+  } = React.useContext(SearchContext);
 
-  const [destinationOption, setDestinationOption] = React.useState(
-    location.state ? location.state.destinationOption : ""
-  );
-
-  const [startDateOption, setStartDateOption] = React.useState(
-    location.state ? dayjs(location.state.startDateOption) : dayjs()
-  );
-
-  const [endDateOption, setEndDateOption] = React.useState(
-    location.state ? dayjs(location.state.endDateOption) : dayjs()
-  );
-
-  const [personOption, setPersonOption] = React.useState(
-    location.state ? location.state.personOption : ""
-  );
   const [enableCheckIn, setEnableCheckIn] = React.useState(true);
+
+  const [minPrice, setMinPrice] = React.useState(0);
+  const [maxPrice, setMaxPrice] = React.useState(3000);
+
+  const { data, loading, error, reFetch } = useFetch(
+    `/api/hotels/find/byCity?city=${destinationOption}&min=${minPrice}&max=${maxPrice}`
+  );
+
+  const handleEdge = (val, ident) => {
+    if (ident === "min") {
+      if (val < 0) {
+        setMinPrice(0);
+      }
+    } else {
+      if (val > 3000) {
+        setMaxPrice(3000);
+      }
+    }
+  };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  const setDestinationOption = (value) => {
+    dispatch({
+      type: "set_search",
+      payload: value,
+      key: "destinationOption",
+    });
+  };
+
+  const setStartDateOption = (value) => {
+    dispatch({
+      type: "set_search",
+      payload: value,
+      key: "startDateOption",
+    });
+  };
+
+  const setEndDateOption = (value) => {
+    dispatch({
+      type: "set_search",
+      payload: value,
+      key: "endDateOption",
+    });
+  };
+
+  const setPersonOption = (name, unary, val) => {
+    dispatch({
+      type: "set_search",
+      key: "personOption",
+      name,
+      unary,
+      mode: "uno", //modul care selecteaza cum se incrementeaza
+      val,
+    });
+  };
+
   const personOptionHandler = (attr, val) => {
     let cleanVal = Math.max(0, val);
-    setPersonOption({
-      ...personOption,
-      [attr]: cleanVal,
-    });
+    setPersonOption(attr, "i", cleanVal);
   };
 
   const StyledCalendarButton = styled(IconButton)(({ theme }) => ({
@@ -130,18 +174,32 @@ export const HotelList = () => {
               <div className={styles.options}>
                 <div className={styles.options_item}>
                   <label htmlFor="min">Min price ( per night )</label>
-                  <input id="min" type="text" />
+                  <input
+                    id="min"
+                    type="number"
+                    min={0}
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    onBlur={(e) => handleEdge(e.target.value, "min")}
+                  />
                 </div>
                 <div className={styles.options_item}>
                   <label htmlFor="max">Max price ( per night )</label>
-                  <input id="max" type="text" />
+                  <input
+                    id="max"
+                    type="number"
+                    max={3000}
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    onBlur={(e) => handleEdge(e.target.value, "max")}
+                  />
                 </div>
                 <div className={styles.options_item}>
                   <label htmlFor="adult">Adult</label>
                   <input
                     id="adult"
                     type="number"
-                    min={0}
+                    min={1}
                     value={personOption.adult}
                     onChange={(e) =>
                       personOptionHandler("adult", e.target.value)
@@ -165,7 +223,7 @@ export const HotelList = () => {
                   <input
                     id="room"
                     type="number"
-                    min={0}
+                    min={1}
                     value={personOption.room}
                     onChange={(e) =>
                       personOptionHandler("room", e.target.value)
@@ -174,15 +232,21 @@ export const HotelList = () => {
                 </div>
               </div>
             </div>
-            <Button variant="contained" color="primary" sx={{ width: "100%" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: "100%" }}
+              onClick={reFetch}
+            >
               Search
             </Button>
           </div>
           <div className={styles.list_result}>
-            <SearchResult />
-            <SearchResult />
-            <SearchResult />
-            <SearchResult />
+            {loading
+              ? "loading"
+              : data.map((item, i) => (
+                  <SearchResult item={item} key={item._id} />
+                ))}
           </div>
         </div>
       </div>

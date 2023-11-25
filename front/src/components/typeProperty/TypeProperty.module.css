@@ -16,7 +16,8 @@
 
 .prop_title {
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 5px 0;
+  text-transform: capitalize;
 }
 
 .prop_desc {

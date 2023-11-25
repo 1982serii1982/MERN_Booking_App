@@ -1,4 +1,5 @@
 import React from "react";
+import useFetch from "../../hooks/useFetch";
 
 import Appartment_1 from "./../../img/Featured/ap_1.jpg";
 import Appartment_2 from "./../../img/Featured/ap_2.jpg";
@@ -7,72 +8,55 @@ import Appartment_4 from "./../../img/Featured/ap_4.jpg";
 import styles from "./FeaturedProperty.module.css";
 
 export const FeaturedProperty = () => {
+  const { data, loading, error } = useFetch(
+    "/api/hotels/find/byFeature?featured=true&limit=2&min=90&max=120"
+  );
+
+  const rating = [
+    { name: "outstanding", num: "90-100" },
+    { name: "excellent", num: "80-89" },
+    { name: "very good", num: "70-79" },
+    { name: "good", num: "60-69" },
+    { name: "average", num: "50-59" },
+    { name: "poor", num: "40-49" },
+    { name: "bad", num: "0-39" },
+  ];
+
+  const sortRating = (rate, range) => {
+    const [min, max] = range.split("-");
+    if (rate * 10 >= min && rate * 10 <= max) {
+      return true;
+    }
+  };
+
+  const getRating = (rate) => {
+    return rating.find((item) => sortRating(rate, item.num));
+  };
+
   return (
     <div className={styles.feat_prop}>
-      <div className={styles.feat_prop_item}>
-        <img
-          className={styles.feat_prop_img}
-          src={Appartment_1}
-          alt="Appartment_1"
-        />
-        <div className={styles.feat_prop_footer}>
-          <p className={styles.feat_prop_name}>Starlight Paradise Suites</p>
-          <p className={styles.feat_prop_city}>Madrid</p>
-          <p className={styles.feat_prop_price}>Starting from £120</p>
-          <div className={styles.feat_prop_rating}>
-            <button>8.9</button>
-            <span>Excellent</span>
-          </div>
-        </div>
-      </div>
-      <div className={styles.feat_prop_item}>
-        <img
-          className={styles.feat_prop_img}
-          src={Appartment_2}
-          alt="Appartment_2"
-        />
-        <div className={styles.feat_prop_footer}>
-          <p className={styles.feat_prop_name}>Grandview Palaces</p>
-          <p className={styles.feat_prop_city}>Tokyo</p>
-          <p className={styles.feat_prop_price}>Starting from £160</p>
-          <div className={styles.feat_prop_rating}>
-            <button>7.6</button>
-            <span>Good</span>
-          </div>
-        </div>
-      </div>
-      <div className={styles.feat_prop_item}>
-        <img
-          className={styles.feat_prop_img}
-          src={Appartment_3}
-          alt="Appartment_3"
-        />
-        <div className={styles.feat_prop_footer}>
-          <p className={styles.feat_prop_name}>Lush Poolside Bungalows</p>
-          <p className={styles.feat_prop_city}>London</p>
-          <p className={styles.feat_prop_price}>Starting from £220</p>
-          <div className={styles.feat_prop_rating}>
-            <button>8.0</button>
-            <span>Excellent</span>
-          </div>
-        </div>
-      </div>
-      <div className={styles.feat_prop_item}>
-        <img
-          className={styles.feat_prop_img}
-          src={Appartment_4}
-          alt="Appartment_4"
-        />
-        <div className={styles.feat_prop_footer}>
-          <p className={styles.feat_prop_name}>Starlight Oceanside Retreats</p>
-          <p className={styles.feat_prop_city}>Paris</p>
-          <p className={styles.feat_prop_price}>Starting from £130</p>
-          <div className={styles.feat_prop_rating}>
-            <button>9.0</button>
-            <span>Excellent</span>
-          </div>
-        </div>
-      </div>
+      {loading
+        ? "loading"
+        : data.map((item, i) => (
+            <div className={styles.feat_prop_item} key={item._id}>
+              <img
+                className={styles.feat_prop_img}
+                src={item.photos[0]}
+                alt={`Appartment_${i}`}
+              />
+              <div className={styles.feat_prop_footer}>
+                <p className={styles.feat_prop_name}>{item.name}</p>
+                <p className={styles.feat_prop_city}>{item.city}</p>
+                <p className={styles.feat_prop_price}>
+                  Starting from £{item.cheapestPrice}
+                </p>
+                <div className={styles.feat_prop_rating}>
+                  <button>{item.rating}</button>
+                  <span>{getRating(item.rating).name}</span>
+                </div>
+              </div>
+            </div>
+          ))}
     </div>
   );
 };

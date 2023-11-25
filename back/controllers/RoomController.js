@@ -32,13 +32,9 @@ export const createRoom = async (req, res, next) => {
     const roomDoc = new RoomModel(req.body);
     const newRoom = await roomDoc.save();
 
-    try {
-      await HotelModel.findByIdAndUpdate(hotelId, {
-        $push: { rooms: newRoom._id },
-      });
-    } catch (error) {
-      next(err);
-    }
+    await HotelModel.findByIdAndUpdate(hotelId, {
+      $push: { rooms: newRoom._id },
+    });
 
     res.status(200).json(newRoom);
   } catch (err) {
@@ -52,9 +48,28 @@ export const updateRoom = async (req, res, next) => {
     const doc = await RoomModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $set: req.body,
+        // $set: req.body,
+        title: req.body.title,
+        price: req.body.price,
+        maxPeople: req.body.maxPeople,
+        desc: req.body.desc,
+        $push: { roomNumbers: req.body.roomNumbers },
       },
       { new: true } //In acest caz se intoarce documentul deja updatat, daca e "false" , atunci in "doc" se va afla documentul updatat
+    );
+
+    res.status(200).json(doc);
+  } catch (err) {
+    next(err);
+  }
+};
+
+//UPDATE ROOM NUMBER AVAILABILITY
+export const updateRoomAvailability = async (req, res, next) => {
+  try {
+    const doc = await RoomModel.updateOne(
+      { "roomNumbers._id": req.params.roomNumberId },
+      { $push: { "roomNumbers.$.unavailableDates": req.body.dates } }
     );
 
     res.status(200).json(doc);
