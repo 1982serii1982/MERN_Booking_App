@@ -12,8 +12,6 @@ import { Footer } from "../../components/footer/Footer";
 import { Reserve } from "../../components/reserve/Reserve";
 import CoolLightBox from "../../components/lightBox/CoolLightBox";
 
-import test from "./../../img/List/Apartments.jpg";
-
 import { SearchContext } from "../../context/SearchContext";
 import { AuthContext } from "../../context/AuthContext";
 import styles from "./Hotel.module.css";
@@ -27,33 +25,6 @@ export const Hotel = () => {
   const { user } = React.useContext(AuthContext);
 
   const { data, loading, error } = useFetch(`/api/hotels/${id}`);
-
-  const photos = [
-    {
-      src: test,
-      alt: "test1",
-    },
-    {
-      src: test,
-      alt: "test2",
-    },
-    {
-      src: test,
-      alt: "test3",
-    },
-    {
-      src: test,
-      alt: "test4",
-    },
-    {
-      src: test,
-      alt: "test5",
-    },
-    {
-      src: test,
-      alt: "test6",
-    },
-  ];
 
   const [currentImageIndex, setCurrentIndex] = React.useState(0);
   const [isOpenLightbox, setIsOpenLightbox] = React.useState(false);
@@ -88,6 +59,12 @@ export const Hotel = () => {
     } else {
       navigate("/login");
     }
+  };
+
+  const photosTransform = (arr) => {
+    return arr.map((item, i) => {
+      return { src: item, alt: "Hotel image" };
+    });
   };
 
   return (
@@ -129,19 +106,18 @@ export const Hotel = () => {
             </Button>
           </div>
           <div className={styles.hotel_body}>
-            {photos.map((item, i) => {
-              //mai tarziu va fi schimbata cu data.photos
+            {data.photos.map((item, i) => {
               return (
                 <img
                   key={i}
-                  src={item.src}
-                  alt={item.alt}
+                  src={item}
+                  alt="Hotel image"
                   onClick={() => imageClickHandler(i)}
                 />
               );
             })}
             <CoolLightBox
-              photos={photos} //mai tarziu va fi schimbata cu data.photos
+              photos={photosTransform(data.photos)}
               currentImageIndex={currentImageIndex}
               isOpenLightbox={isOpenLightbox}
               setCurrentIndex={setCurrentIndex}
@@ -151,30 +127,13 @@ export const Hotel = () => {
           </div>
           <div className={styles.hotel_footer}>
             <div className={styles.footer_desc}>
-              <h2>Stay in the heart of Norwich</h2>
-              <p>
-                Located a 5-minute walk from St. Florian's Gate in Krakow, Tower
-                Street Apartments has accommodations with air conditioning and
-                free WiFi. The units come with hardwood floors and feature a
-                fully equipped kitchenette with a microwave, a flat-screen TV,
-                and a private bathroom with shower and a hairdryer. A fridge is
-                also offered, as well as an electric tea pot and a coffee
-                machine. Popular points of interest near the apartment include
-                Cloth Hall, Main Market Square and Town Hall Tower. The nearest
-                airport is John Paul II International Kraków–Balice, 16.1 km
-                from Tower Street Apartments, and the property offers a paid
-                airport shuttle service.
-              </p>
+              <p>{data.desc}</p>
             </div>
             <div className={styles.footer_offer}>
               <h3>
                 Perfect for a {dayCounter(startDateOption, endDateOption)}-night
                 stay!
               </h3>
-              <p>
-                Located in the real heart of Krakow, this property has an
-                excellent location score of {data.rating}!
-              </p>
               <p>
                 <b>
                   £

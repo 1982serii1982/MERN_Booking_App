@@ -1,15 +1,12 @@
 import React from "react";
 import useFetch from "../../hooks/useFetch";
 
-import Appartment_1 from "./../../img/Featured/ap_1.jpg";
-import Appartment_2 from "./../../img/Featured/ap_2.jpg";
-import Appartment_3 from "./../../img/Featured/ap_3.jpg";
-import Appartment_4 from "./../../img/Featured/ap_4.jpg";
 import styles from "./FeaturedProperty.module.css";
 
 export const FeaturedProperty = () => {
   const { data, loading, error } = useFetch(
-    "/api/hotels/find/byFeature?featured=true&limit=2&min=90&max=120"
+    //"/api/hotels/find/byFeature?featured=true&limit=2&min=90&max=120"
+    "/api/hotels/find/byFeature?featured=true"
   );
 
   const rating = [
@@ -42,7 +39,7 @@ export const FeaturedProperty = () => {
               <img
                 className={styles.feat_prop_img}
                 src={item.photos[0]}
-                alt={`Appartment_${i}`}
+                alt={item.title}
               />
               <div className={styles.feat_prop_footer}>
                 <p className={styles.feat_prop_name}>{item.name}</p>
@@ -51,8 +48,17 @@ export const FeaturedProperty = () => {
                   Starting from £{item.cheapestPrice}
                 </p>
                 <div className={styles.feat_prop_rating}>
-                  <button>{item.rating}</button>
-                  <span>{getRating(item.rating).name}</span>
+                  {item.rating ? (
+                    <>
+                      <button>{item.rating}</button>
+                      <span>{getRating(item.rating).name}</span>
+                    </>
+                  ) : (
+                    <>
+                      <button>0</button>
+                      <span>Not available</span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

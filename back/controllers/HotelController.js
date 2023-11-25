@@ -30,13 +30,14 @@ export const getAllHotelsByCity = async (req, res, next) => {
 };
 
 export const getAllFeaturedHotels = async (req, res, next) => {
-  const { featured, limit, min, max, ...other } = req.query;
+  //const { featured, limit, min, max, ...other } = req.query;
+  const { featured, ...other } = req.query;
   try {
     const hotels = await HotelModel.find({
       featured,
-      cheapestPrice: { $gt: min, $lt: max },
+      //cheapestPrice: { $gt: min, $lt: max },
     })
-      .limit(limit)
+      //.limit(limit)
       .exec();
 
     res.status(200).json(hotels);
@@ -46,23 +47,25 @@ export const getAllFeaturedHotels = async (req, res, next) => {
 };
 
 export const countHotelsByCity = async (req, res, next) => {
-  console.log(req.cookies);
-  const cities = req.query.cities.split(",");
-
   const run = async () => {
-    const list = await Promise.all(
-      cities.map((city) => {
-        let hotels = HotelModel.countDocuments({ city: city });
-        return hotels;
-      })
-    );
+    const all = await HotelModel.aggregate([
+      {
+        $group: {
+          _id: "$city", //face agregare dupa cimpul city
+          totalCity: { $sum: 1 }, //numara cite documente sint in BD pentru fiecare cimp city distinct
+          photos: { $first: "$photos" }, //in acele documente gasite pentru fiecare cimp city distinct, preia cimpul "photos" din primul document
+          //photosArray: { $push: { photos: "$photos" } }, //in acele documente gasite pentru fiecare cimp city distinct, preia cimpul "photos" din toate documentele
+        },
+      },
+    ]);
 
-    return list;
+    return all;
   };
+
   try {
     let result = await run();
 
-    res.status(200).json(result);
+    res.status(200).json(result.slice(0, 3));
   } catch (err) {
     next(err);
   }

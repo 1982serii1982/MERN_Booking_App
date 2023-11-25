@@ -13,6 +13,7 @@
 }
 
 .featured_item {
+  flex: 1 1;
   color: white;
   position: relative;
   border-radius: 10px;

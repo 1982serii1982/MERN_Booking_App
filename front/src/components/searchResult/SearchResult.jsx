@@ -38,7 +38,7 @@ export const SearchResult = ({ item }) => {
 
   return (
     <div className={styles.search_result_item}>
-      <img src={test /*aici va fi pe urma item.photo */} alt={item.photos[0]} />
+      <img src={item.photos[0]} alt={item.title} title={item.title} />
       <div className={styles.search_result_desc}>
         <h3 className={styles.desc_title}>{item.name}</h3>
         <p className={styles.desc_distance}>{item.distance}m from center</p>
@@ -57,8 +57,17 @@ export const SearchResult = ({ item }) => {
       </div>
       <div className={styles.search_result_details}>
         <div className={styles.search_result_rating}>
-          <span>{getRating(item.rating).name}</span>
-          <button>{item.rating}</button>
+          {item.rating ? (
+            <>
+              <span>{getRating(item.rating).name}</span>
+              <button>{item.rating}</button>
+            </>
+          ) : (
+            <>
+              <span>Not available</span>
+              <button>0</button>
+            </>
+          )}
         </div>
         <div className={styles.search_result_price}>
           <span>£{item.cheapestPrice}</span>
