@@ -24,11 +24,13 @@ router.patch(
 );
 
 //DELETE
-router.delete(
-  "/:roomId/:hotelId",
-  checkToken,
-  checkAdmin,
-  RoomController.deleteRoom
-);
+// router.delete(
+//   "/:roomId/:hotelId",
+//   checkToken,
+//   checkAdmin,
+//   RoomController.deleteRoom
+// );
+
+router.delete("/:roomId", checkToken, checkAdmin, RoomController.deleteRoom);
 
 export default router;

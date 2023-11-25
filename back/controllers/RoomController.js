@@ -80,14 +80,16 @@ export const updateRoomAvailability = async (req, res, next) => {
 
 //DELETE
 export const deleteRoom = async (req, res, next) => {
-  const hotelId = req.params.hotelId;
   try {
     await RoomModel.findByIdAndDelete(req.params.roomId);
 
     try {
-      await HotelModel.findByIdAndUpdate(hotelId, {
-        $pull: { rooms: req.params.roomId },
-      });
+      await HotelModel.updateMany(
+        { rooms: req.params.roomId },
+        {
+          $pull: { rooms: req.params.roomId },
+        }
+      );
     } catch (error) {
       next(err);
     }
@@ -99,3 +101,24 @@ export const deleteRoom = async (req, res, next) => {
     next(err);
   }
 };
+
+// export const deleteRoom = async (req, res, next) => {
+//   const hotelId = req.params.hotelId;
+//   try {
+//     await RoomModel.findByIdAndDelete(req.params.roomId);
+
+//     try {
+//       await HotelModel.findByIdAndUpdate(hotelId, {
+//         $pull: { rooms: req.params.roomId },
+//       });
+//     } catch (error) {
+//       next(err);
+//     }
+
+//     res.status(200).json({
+//       message: "success",
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };

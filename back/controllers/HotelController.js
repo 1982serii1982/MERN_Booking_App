@@ -4,14 +4,8 @@ import RoomModel from "../models/Room.js";
 import { createError } from "../utils/error.js";
 
 export const getAllHotels = async (req, res, next) => {
-  const { featured, limit, min, max, ...other } = req.query;
   try {
-    const hotels = await HotelModel.find({
-      featured,
-      cheapestPrice: { $gt: min, $lt: max },
-    })
-      .limit(limit)
-      .exec();
+    const hotels = await HotelModel.find().exec();
 
     res.status(200).json(hotels);
   } catch (err) {
@@ -52,6 +46,7 @@ export const getAllFeaturedHotels = async (req, res, next) => {
 };
 
 export const countHotelsByCity = async (req, res, next) => {
+  console.log(req.cookies);
   const cities = req.query.cities.split(",");
 
   const run = async () => {

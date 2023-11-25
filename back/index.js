@@ -29,7 +29,22 @@ mongoose.connection.on("connected", () => {
 
 app.use(cookieParser()); //The middleware will parse the Cookie header on the request and expose the cookie data as the property req.cookies
 app.use(express.json());
-app.use(cors());
+
+const whitelist = ["http://localhost:5173", "http://localhost:3000"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
@@ -39,6 +54,7 @@ app.use("/api/rooms", roomsRoute);
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong";
+
   return res.status(errorStatus).json({
     success: false,
     status: errorStatus,

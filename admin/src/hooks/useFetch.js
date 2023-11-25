@@ -2,9 +2,10 @@ import React from "react";
 import axiosM from "../utils/axiosM.js";
 
 const useFetch = (url) => {
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
+  //console.log("usefetch");
 
   React.useEffect(() => {
     const fetchData = async () => {

@@ -10,8 +10,7 @@ export const register = async (req, res, next) => {
     const hash = await bcrypt.hash(password, salt);
 
     const userDoc = new UserModel({
-      username: req.body.username,
-      email: req.body.email,
+      ...req.body,
       passwordHash: hash,
     });
 
@@ -66,6 +65,7 @@ export const login = async (req, res, next) => {
       .json({
         message: "success",
         user: userData,
+        isAdmin,
       });
   } catch (err) {
     next(err);

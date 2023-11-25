@@ -1,6 +1,6 @@
 import React from "react";
 import axiosM from "./../../utils/axiosM";
-import { AuthContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -14,14 +14,16 @@ import {
   Slide,
 } from "@mui/material";
 
-import styles from "./Login.module.css";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
-export const Login = () => {
+import styles from "./Login.module.scss";
+
+const Login = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
 
-  const { loading, error, dispatchAuth } = React.useContext(AuthContext);
+  const { state, dispatch } = React.useContext(AuthContext);
 
   function SlideTransition(props) {
     return <Slide {...props} direction="down" />;
@@ -41,15 +43,27 @@ export const Login = () => {
   });
 
   const onSubmit = async (data, e) => {
-    dispatchAuth({ type: "login_start" });
+    dispatch({ type: "login_start" });
     try {
       const res = await axiosM.post("/api/auth/login", data, {
         withCredentials: true,
       });
-      dispatchAuth({ type: "login_success", payload: res.data });
-      navigate(-1);
+
+      if (!res.data.isAdmin) {
+        dispatch({
+          type: "login_fail",
+          payload: "Login or password is incorrect",
+        });
+        setOpen(true);
+        return;
+      }
+
+      dispatch({ type: "login_success", payload: res.data.user });
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate("/");
     } catch (error) {
-      dispatchAuth({ type: "login_fail", payload: error.response.data });
+      dispatch({ type: "login_fail", payload: error.response.data.message });
+      setOpen(true);
     }
   };
 
@@ -65,11 +79,11 @@ export const Login = () => {
     setOpen(false);
   };
 
-  React.useEffect(() => {
-    if (error) {
-      setOpen(true);
-    }
-  }, [error]);
+  // React.useEffect(() => {
+  //   if (error) {
+  //     setOpen(true);
+  //   }
+  // }, [error]);
 
   return (
     <>
@@ -81,7 +95,7 @@ export const Login = () => {
         TransitionComponent={SlideTransition}
       >
         <Alert elevation={16} variant="filled" severity="error">
-          Username or Password is incorect.
+          {state.error}
         </Alert>
       </Snackbar>
       <Paper classes={{ root: styles.root }}>
@@ -89,7 +103,7 @@ export const Login = () => {
           sx={{ textAlign: "center", fontWeight: "bold", marginBottom: "30px" }}
           variant="h5"
         >
-          Log in to account
+          Log in to admin panel
         </Typography>
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           <TextField
@@ -120,7 +134,7 @@ export const Login = () => {
             })}
           />
           <Button
-            disabled={loading}
+            //disabled={loading}
             type="submit"
             size="large"
             variant="contained"
@@ -133,3 +147,5 @@ export const Login = () => {
     </>
   );
 };
+
+export default Login;

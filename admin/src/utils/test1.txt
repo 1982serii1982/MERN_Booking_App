@@ -1,0 +1,28 @@
+<Route
+            index
+            //path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <List />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hotels"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          cu aceasta varianta la primul rendering se triggereaza useeffectul din App.js , si la  schimbarea de la path='/' la path='/users' sau path='hotels' si de la
+          path='/users' sau path='hotels' la path='/'  sau intre ele nu se mai triggereaza useeffectul din App.js
